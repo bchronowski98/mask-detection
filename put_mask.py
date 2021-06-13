@@ -1,45 +1,6 @@
 import os
-import sys
-# random
-import argparse
 import numpy as np
 from PIL import Image, ImageFile
-
-__version__ = '0.3.0'
-
-IMAGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images')
-DEFAULT_IMAGE_PATH = os.path.join(IMAGE_DIR, 'default-mask.png')
-BLACK_IMAGE_PATH = os.path.join(IMAGE_DIR, 'black-mask.png')
-BLUE_IMAGE_PATH = os.path.join(IMAGE_DIR, 'blue-mask.png')
-RED_IMAGE_PATH = os.path.join(IMAGE_DIR, 'red-mask.png')
-
-
-def cli():
-    parser = argparse.ArgumentParser(description='Wear a face mask in the given picture.')
-    parser.add_argument('pic_path', help='Picture path.')
-    parser.add_argument('--show', action='store_true', help='Whether show picture with mask or not.')
-    parser.add_argument('--model', default='hog', choices=['hog', 'cnn'], help='Which face detection model to use.')
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('--black', action='store_true', help='Wear black mask')
-    group.add_argument('--blue', action='store_true', help='Wear blue mask')
-    group.add_argument('--red', action='store_true', help='Wear red mask')
-    args = parser.parse_args()
-
-    pic_path = args.pic_path
-    if not os.path.exists(args.pic_path):
-        print(f'Picture {pic_path} not exists.')
-        sys.exit(1)
-
-    if args.black:
-        mask_path = BLACK_IMAGE_PATH
-    elif args.blue:
-        mask_path = BLUE_IMAGE_PATH
-    elif args.red:
-        mask_path = RED_IMAGE_PATH
-    else:
-        mask_path = DEFAULT_IMAGE_PATH
-
-    FaceMasker(pic_path, mask_path, args.show, args.model).mask()
 
 
 def create_mask(image_path):
