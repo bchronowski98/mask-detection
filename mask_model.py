@@ -30,7 +30,7 @@ def plot_loss_curves(history):
     plt.legend()
 
 
-# MODEL
+# MODEL``
 
 # Load keras app / pre-trained model
 
@@ -54,27 +54,25 @@ model.compile(optimizer=tf.keras.optimizers.Adam(lr=1e-4, decay=1e-4 / 20),
               metrics=['accuracy'])
 
 # data
-MASK_DIR = r'C:\Users\Bartek\Desktop\ML\Projekt\dataset\mask'
-NO_MASK_DIR = r'C:\Users\Bartek\Desktop\ML\Projekt\dataset\no_mask'
+image_dir = r'C:\Users\Bartek\Desktop\ML\Projekt\dataset'
 
 images = []
 labels = []
 
-for filename1 in os.listdir(MASK_DIR):
-    file1 = os.path.join(MASK_DIR, filename1)
-    file1 = tf.keras.preprocessing.image.load_img(file1, target_size=(224, 224))
-    file1 = tf.keras.preprocessing.image.img_to_array(file1)
-    file1 = tf.keras.applications.xception.preprocess_input(file1)
-    images.append(file1)
-    labels.append(1)
+for root, folders, filelist in os.walk(image_dir):
+    for file in filelist:
+        path = os.path.join(root, file)
+        print(path)
+        img = tf.keras.preprocessing.image.load_img(path, target_size=(224, 224))
+        img = tf.keras.preprocessing.image.img_to_array(img)
+        img = tf.keras.applications.xception.preprocess_input(img)
+        images.append(img)
+        label = path.split('\\')[-2]
+        if label == 'mask':
+            labels.append(1)
+        else:
+            labels.append(0)
 
-for filename2 in os.listdir(NO_MASK_DIR):
-    file2 = os.path.join(NO_MASK_DIR, filename2)
-    file2 = tf.keras.preprocessing.image.load_img(file2, target_size=(224, 224))
-    file2 = tf.keras.preprocessing.image.img_to_array(file2)
-    file2 = tf.keras.applications.xception.preprocess_input(file2)
-    images.append(file2)
-    labels.append(0)
 
 labels = tf.keras.utils.to_categorical(labels)
 images = np.array(images, dtype="float32")
